@@ -1,0 +1,991 @@
+# JavaScript高级程序设计 chapter 5 
+
+# 引用类型
+
+- 使用对象
+- 创建并操作数值
+- 理解基本的JavaScript类型
+- 使用基本类型和基本包装类型
+
+- 引用类型的值（对象）是引用类型的一个实例，引用类型在JavaScript中是一种数据结构
+
+- 引用类型将数据和功能组织在一起。也被称为类。这样的称呼并不妥当。JavaScript不具备传统面向对象语言所支持的类和接口等基本结构。引用类型有时候也被称为对象定义，他们描述的是一类对象所具有的属性和方法
+
+- 对象用一个构造函数来创建的，构造函数本身是一个函数，只不过是出于创建新对象而定义的
+
+  ```JavaScript
+  var person = new Object();
+  // Object()是一个构造函数。JavaScript提供了很多的原生引用类型
+  ```
+
+  ## 5.1 Object类型
+
+  - object是JavaScript中用到的最多的类型
+
+  - 创建Object实例的方式有两种
+
+    ```javascript
+    var person = new Object(); // 第一种使用Object()构造函数
+    person.name = "Nicholas";
+    person.name = 29;
+    
+    var person = {   		// 第二种使用字面量的方法来构造
+        name:"Nicholas",
+        age:29
+    };
+    ```
+
+  - JavaScript有表达式上下文和语句上下文，表达式上下文可以返回严格值
+
+  - 在使用对象字面量语法时，属性名可以使用字符串
+
+    ```javascript
+    var person = {
+    "name":"Nicholas", // 变量名可以使用字符串
+    "age":29,
+    5 : true  // 这个5会被转换成为字符串
+    }
+    ```
+
+  - 现在的对象字面量语法不会调用构造函数
+
+  - 字面量要求的代码量少而且方便传递大量参数
+
+    ```javascript
+    function displayInfo(args){
+    	var output = "";
+    	if(typeof args.name == "string"){
+    		output += "Name: " + args.name + "\n";
+    	}
+    	if(typeof args.age == "number"){
+    		output += "Name: " + args.name + "\n";
+    	}
+    	alert(output);
+    }
+    displayInfo({
+    	name:"Nicholas",
+    	age： 29
+    })
+    displayInfo({
+    	name:"Greg"
+    })
+    ```
+
+  - JavaScript有两种方法来访问对象的属性
+
+    ```javascript
+    alert(person["name"]); // 把要访问的属性转换为string在进行访问 
+    alert(person.name);
+    
+    // 使用第一种方法可以用变量来访问属性
+    var propertyName = "name";
+    alert(person[propertyName]); // 可以正常访问
+    
+    // 如果属性包含导致语法错误的字符，也可以用方括号表示法
+    person["first name"] = "Nicholas";
+    // "first name"是一种非法的变量
+    ```
+
+  - 通常使用点表示法
+
+  ## 5.2 Array 类型
+
+  - JavaScript数组的每一项可以保存其他任何的数据
+
+  - JavaScript数组的大小是可以动态调整的
+
+  - 创建数组的基本方式有两种
+
+    ```JavaScript
+    // 1.使用Array()构造函数定义数组
+    var colors = new Array(); // 创建严格空数组
+    var colors = new Array(20); // 创建一个大小为20的数组
+    var colors = new Array("red","blue","green");  // 初始化了数值的内容
+    
+    // 在使用数值是可以省略new操作符
+    var colors = Array(3);
+    var colors = Array("red","blue");
+    
+    // 2.使用数组字面量表示法
+    var colors = ["red","blue","green"];
+    var nmaes = [];   // 创建一个空数组
+    var values = [1,2,];  // 不要这样！！！
+    var options = [,,,,,]; // 不要这样！！！
+    ```
+
+  - 现在JavaScript使用字面量来定义数组不会调用Array()构造函数
+
+  - 在读取和数值数组时，要使用方括号并提供相应值基于0的数字索引
+
+    ```javascript
+    var colors = ["red","blue","green"];
+    alert(colors[0]); // 访问
+    colors[2] = "black"; // 修改
+    colors[3] = "brown"; // 新增length加了1
+    
+    // 数组的项数存储在length变量中
+    var colors = ["red","blue","green"];
+    var names = [];
+    
+    alert(colors.length); //3
+    alert(names.length); //0
+    ```
+
+  - 检测数组
+
+    - 对于一个网页或者一个全局变量来说，可以使用instanceof
+
+      ​	
+
+      ```javascript
+      var arr = new Array();
+       if(arr instanceof Array){
+            alert("这是一个数组")
+          }
+      // instanceof 存在的问题是，它假定大一的全局执行环境。如果包含多个框架
+      // 那实际上操作两个以上的全局执行环境，从而操作两个以上的1不同版本的Array构造函数
+      
+      // 为了解决这个问题，添加了Array.isArray()方法。这个方法的最终目的是确定某个值是不是数组
+      
+      	var arr  = new Array();
+          if(Array.isArray(arr)){
+              alert('这是一个数组')
+          }
+      ```
+
+  - 转换方法
+
+    - toLocaleString()：经常会返回与toString()和valueOf()相同的值，但是会调用每一项的toLocaleString
+
+    - toString():返回以逗号为连接符的一个数组字符串
+
+    - valueOf()：返回的还是数组
+
+    - join()方法只接受一个参数，即作为分隔符的字符串，然后返回包含所有数值项的字符串
+
+      ```javascript
+       var arr = ["111","2222","3333"];
+          alert(arr.join('@')); // 返回"111@2222@3333" 
+      
+      // 不给join()传参数，或者传入undefined，会以逗号作为分隔符
+      ```
+
+  - 栈方法
+
+    ```javascript
+    var stack = [10,29];
+        var num = stack.push(20); // 返回栈内的参数的个数
+        alert(num);
+        alert(stack); // 10 29 20 数组的末尾作为栈顶
+    
+        var tem = stack.pop(); // 删除并且返回栈顶元素
+        alert(tem);
+        alert(stack); // 10 29 数组末尾作为栈顶
+    ```
+
+  - 队列方法
+
+    ```javascript
+    var que = [10,20,30];
+        var num = que.push(40);// 在队尾插入元素，返回数组元素的个数
+        // 数组末尾作为队尾
+        alert(num); 
+        alert(que); // 10 20 30 40 
+    
+        var tem = que.shift(); // 在队头删除并且返回该元素，数组开头作为对头
+        alert(tem);
+        alert(que);  // 20 30 40 
+    
+        var num2 = que.unshift(60); // 在对头插入元素，并且返回数组的大小 
+        alert(num2);
+        alert(que);  // 60 20 30 40 
+        // 可以搭配起来作为双端队列 
+    ```
+
+  - 重排序方法
+
+    - reverse（）
+
+      ```javascript
+       var arr = [1,2,3,4];
+          arr.reverse();
+          alert(arr); // 4,3,2,1
+      ```
+
+    - sort（）
+
+      ```javascript
+       var arr = [2,31,2,1,2,3,4,5,1]
+          arr.sort();
+          alert(arr); // 1,1,2,2,2,3,31,4,5 这个会转换为string类型后再进行排序
+      ```
+
+      sort方法会可以接收一个比较函数作为参数，来指定那个值在前面
+
+      - 比较函数接收两个参数，如果第一个参数应该位于第二个参数返回一个负数，两个参数相等返回0，否则返回一个正数
+
+        ```javascript
+         function compara(num1,num2){
+              if(num1 < num2)return -1; // 不要改变位置 
+              else if(num === num2)return 0;
+              else return 1;
+            var arr = [2,31,2,1,2,3,4,5,1];
+            arr.sort(compara);
+            alert(arr); // 1,1,2,2,2,3,4,5,31 返回正确答案 
+            }
+        // 简略写法
+          var arr = [2,31,2,1,2,3,4,5,1];
+             arr.sort((n1,n2)=>{ return n1 - n2;});
+             alert(arr); // 1,1,2,2,2,3,4,5,31 返回正确答案 
+        ```
+
+    - 操作方法
+
+      - concat（）：可以基于当前数组中的所有项创建一个新数组
+
+        ```javascript
+         var arr1 = ["aa","bb","cc","dd"];
+            var arr2 = arr1.concat("cc",['dd','ee']);
+            alert(arr2); // aa bb cc dd cc dd ee
+        	alert(arr1); // aa bb cc dd 原来的数组保持不变 
+        ```
+
+      - slice（）：基于当前数组中的一项或多项创建一个新数
+
+        ```javascript
+         var arr = ["aa","bb","cc"];
+            var arr1 = arr.slice(1); // 从第一个开始到最后一个 
+            alert(arr1); // bb,cc
+            var arr2 = arr.slice(1,2);
+            alert(arr2); // bb 
+            var arr3 = arr.slice(1,3);
+            alert(arr3); // bb cc 
+        ```
+
+      - splice() : 1.删除 2.插入 3.替换 
+
+        ```javascript
+        var [删除的元素的数组] = [操作数组].splice([开始的位置],[要删除的元素的个数],[要替换的元素。。。])
+        ```
+
+    - 位置方法
+
+      - indexOf()
+
+      - lastIndexOf()
+
+        ```javascript
+        var arr = [1,2,3,4,5,1,4,2,3];
+            alert(arr.indexOf(4)); // 3 
+            alert(arr.lastIndexOf(4)); // 6
+        
+            alert(arr.indexOf(4,5)); // 从第5个元素开始查找
+            alert(arr.lastIndexOf(4,5)); // 3 从第五个元素开头从前查找 
+        
+            alert(arr.indexOf(100)); // 没有找到返回-1
+            alert(arr.lastIndexOf(100)); // 没有找到返回-1 
+        ```
+
+    - 迭代方法
+
+      1.every(): 对数组中单的每一项给定函数，如果该函数对每一项都返回true，则返回true
+
+      2.some():对数组中的每一项运行给定函数，如果该函数对任一项返回true，则返回true
+
+      ```javascript
+       var arr = [1,2,3,4,5,1,4,2,3];
+          var fl = arr.every((item,index)=>{
+              return item > 2;
+          })
+          alert(fl); // false 不是每一个数都大于2
+          var f2 = arr.some((item,index)=>{
+            return item > 2;
+          })
+          alert(f2); // true 存在一个item大于
+      ```
+
+      3.filter( ):对数组中的每一项运行给定函数，返回该函数会返回true的项组成的数组。
+
+      ```javascript
+      var arr = [1,2,3,4,5,1,4,2,3];
+          var arr2 = arr.filter((item,index)=>{
+                return item > 2;
+          });
+          alert(arr2); // 把每一个大于2的元素过滤出来 3，4，5，4，3
+      ```
+
+      4.对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。
+
+      ```javascript
+      var arr = [1,2,3,4,5,1,4,2,3];
+          var arr2 = arr.map((item,index)=>{
+              return item * 2;
+          })
+          alert(arr2); // 2,4,6,8,10,2,8,4,6 每一个元素按规则变换
+      ```
+
+      5.forEach()：对每一个元素进行遍历，没有返回值，和for循环一样 
+
+      ```JavaScript 
+      var arr = [1,2,3,4,5,1,4,2,3];
+          arr.forEach((item,index)=>{
+              if(item % 2 == 0 ){
+                alert("这个数是偶数鸭！！！");
+              }
+          })
+      ```
+
+  - 缩小方法
+
+    1. reduce（)：从左到右
+
+    2. reduceRight （）：从右到左
+
+       ```javascript
+       var arr = [1,2,3,4,5,1,4,2,3];
+           var sum = arr.reduce((pre,cur,index,array)=>{
+               // pre -前面迭代得到的值
+               // cur -当前的item的值
+               return pre + cur;
+           }) // 25 
+       ```
+
+
+
+## 5.3 Date类型 
+
+- 早期的Date类型是在java的java.util.Date类的基础上构建的
+
+- Date使用UTC（挂机协调时间）1970-1-1开始来保存时间。UTC可以精确到该时间的285616年后
+
+- 创建一个日期对象，操作如下：
+
+  ```javascript
+  var  now = new Date();
+      alert(now); // Sun Jan 31 2021 20:34:47 GMT+0800 (中国标准时间)
+  ```
+
+- 在调用Date函数不传参数的情况下，新创建的对象自动获得当前日期和时间。如果想根据特定时间来创建对象，必须输入表示该日期的毫秒数，为了简化这一计算过程。JavaScript提供了两个方法：Data.parse()和Date.UTC().
+
+## 
+
+## 5.4 RegExp 类型
+
+```javascript
+var expression = / pattern / flags;
+// pattern 标识正则表达式
+// flags 标明正则表达式的小为
+/*
+	-g 表示全局模式，匹配所有的表达式，而不是匹配到第一个就停下来
+	-i 表示不区分大小写
+	-m 表示多行模式
+*/
+```
+
+- 模式使用的所有的元字符都需要转义
+
+  ( [ { \ ^ $ | ? *  + . } ] )
+
+  ```javascript
+   var pat1 =  /[bc]a/i; // 匹配ba ca 不区分大小写
+      var pat2 = /\[bc\]a/i; // 匹配[bc]a 不区分大小写
+  
+      var pat3 = /.at/gi; // 匹配以at结尾的字符
+      var pat4 = /\.at/gi; // 匹配所有的.at字符
+  ```
+
+- 除了用字面量的形式来定义正则表达式外，还可以使用构造函数来创建 
+
+  ```javascript
+  var pat1 =  /[bc]a/i; // 匹配ba ca 不区分大小写
+      var pat2 = RegExp("[bc]a","i");
+      // pat1 和 pat2 等效 
+  ```
+
+  ![image-20210131205454986](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210131205454986.png)
+
+- 在ECMAScript3中，正则表达式字面量共享一个RegExp 实例，而构造函数创建的每一个新RegExp实例都是一个新实例
+
+  ```javascript
+  var re = null,i;
+        for(i = 0;i < 10;i++){
+          re = /cat/g;
+          console.log(re.test('catastrophe'));// 在ECMAScript3 中只会匹配一次
+        }
+        // 这个实际上只是创建了一个RegExp实例
+        for(i = 0;i < 10;i++){
+          re = new RegExp('cat','g');
+          console.log(re.test('catastrophe')); // 每一次都会重新开始匹配
+        }
+  ```
+
+- RegExp 实例属性
+
+  - global   布尔值，表示是否设置了g标签
+
+  - ignoreCase   布尔值，表示是否设置了i标签
+
+  - lastIndex：整数，表示开始搜索下一个匹配的字符的位置，从0开始
+
+  - multiline: 整数，表示是否设置了m标签
+
+  - source：正则表达式的字符串表示，按照字面量形式而非传入构造函数字符串返回
+
+    ```javascript
+    var pat = /.at/i;
+          alert(pat.source); // .at
+    ```
+
+  - 不管是字面量还是构造函数构造，他们的属性都是一样的
+
+- RegExp 实例方法
+
+  - RegExp 对象的主要方法是exec()，该方法专门为捕捉组而设计
+
+    ......
+
+- Function类型
+
+  - 函数实际上是都是对象，每个函数都是Function类型的实例
+
+    ```javascript
+    	 function sum(a,b){
+            return a + b;
+          }
+          var sum = function(a,b){
+            return a + b;
+          }
+          // 这两种方法几乎没有差别
+          var sum = new Function("num1","num2","return num1 + num2"); // 不推荐 
+    	// 这种方式会导致解析两次代码
+    ```
+
+- 没有重载（深入理解）
+
+  - 将函数想象为指针，这样有助于理解为什么ECMAScript没有函数重载的概念
+
+    ```javascript
+    var num = 10;
+        function addSomeNum(num){
+          return num + 10;
+        }
+        function addSomeNum(num){
+            return num + 20;
+        }
+        alert(addSomeNum(num)); // 30 使用第二个函数的定义
+    ```
+
+- 函数声明和函数表达式
+
+  - 解析器会先读取函数声明，在代码执行前可用。而函数表达式则不同
+
+    ```javascript
+    var a = 10,b = 20;
+        alert(sum(a,b));  // 30 可以正常输出
+        function sum(a,b){ // 这个函数在代码执行前就加载好了
+        return a + b;
+        }
+        
+         var a = 10,b = 20;
+        alert(sum(a,b));  // 无法正常输出
+      	 var sum = function(){ // 这个函数表达式不会提前解析
+         return a + b;
+       }
+         
+         // 除了以上这个区别外，其他的基本上是一样的
+    ```
+
+- 作为值的函数
+
+  - 函数可以作为一个值（对象），作为另外一个函数的返回值
+
+    ```javascript
+    function callSomeFunction(fu,num){
+           return fu(num);
+         }
+        function add10(num){
+          return num + 10;
+        }
+        var res = callSomeFunction(add10,10);
+        alert(res); // 20
+    ```
+
+  - 从一个函数返回另一个函数返回另一个函数。
+
+    ```javascript
+     function creatComparisonFunction(propertyName){
+            return function(obj1,obj2){
+              var val1 = obj1[propertyName];
+              var val2 = objw[propertyName];
+              return val1 - val2;
+            }
+          }
+          // 返回一个对象的自定义比较函数
+    ```
+
+- 函数的内部属性
+
+  - 在函数的内部，有两个特殊的对象：arguments和this。
+
+    - arguments是一个**类数组对象**，它包含着插入函数的所有对象，他还有一个callee的属性，该属性是一个指针，指向当前的函数
+
+      ```javascript
+      function fac(num){ // 阶乘函数
+            if(num == 0)return 1;
+            else return fac(num - 1) * num;
+          }
+          // 在这个函数不变的情况下，没有问题。但是函数名如果发生变化，就会出现未知的风险
+          
+          // 改进
+           function fac(num){
+            if(num == 1)return 1;
+            else return arguments.callee(num - 1) * num;
+            // callee 是指向当前函数
+         }
+       // 这样就可以很好的解决函数名会发生变化的问题
+          
+      ```
+
+  - this对象，其行为和c++大致相似，this的引用就是函数执行的环境对象 
+
+    ​	
+
+    ```javascript
+     window.color = "red";
+        var o = {color:"blue"};
+        function sayColor(){
+          alert(this.color);
+        }
+        sayColor(); // "red"
+        o.sayColor = sayColor;
+        o.sayColor(); //"blue"
+        
+        // this指向当前的环境对象 
+    ```
+
+  - caller：这个属性保存了调用当前函数的引用，在全局调用，它的值为null；
+
+    ```javascript
+    function outer(){
+          inner();
+        }
+        function inner(){
+          alert(inner.caller);
+        }
+        outer();  // function outer(){inner()；} 返回最外层函数的源代码
+        
+          function outer(){
+            inner();
+          }
+          function inner(){
+            alert(arguments.callee.caller);
+          }
+          outer(); // function outer(){inner()；} 返回最外层函数的源代码
+    	 inner(); // null 
+    ```
+
+  - 函数的属性和方法
+
+    - 每个函数都是对象，因此函数的也有属性和方法 
+
+      1. length：表示参数的个数 
+
+      2. prototype：对于引用类型来说，prototype是保存他们所有实例方法的真正所在。toString（） 和 valueOf()等方法实际上都保存在prototype名下。prototype的属性是不可枚举的。
+
+      3. 每个函数都包含两个非继承而来的方法：apply（）和 call（）。这两个方法的用途都是在特定的作用域调用函数，实际上等于设置函数体内的this对象的值。
+
+         1. apply接收两个参数：一个是在其中运行函数的作用域，另一个是参数数组。其中第二个可以是Array实例，还可以是arguments对象。
+
+            ```javascript
+            function sum(num1,num2){
+            	return num1 + num2;
+            }
+            
+            function callSum1(num1,num2){
+            	return sum.apply(this,arguments); // 传入arguements
+            }
+            function callSum2(num1,num2){
+            	return sum.apply(this,[num1,num2]); // 这个this表示当前环境对象 传入Array实例
+            }
+            // 在严格模式下，不会把this转型为window，除非把函数添加到莫个对象或者调用apply() 或者 call（），否则this将是undefined
+            ```
+
+         2. call()和apply()方法作用相同，他们的区别是传入的参数的方式不同。在使用call方法时每一个参数必须列举出来
+
+            ```javascript
+             function sum(a,b){
+                    return a + b;
+                  }
+                function sum1(a,b){
+                  return sum.call(this,a,b); // 每一个参数都列举出来了 
+                }
+                alert(sum1(10,20)); // 30
+            ```
+
+      4. apply（）和 call 真正的作用是，他们可以扩充函数赖以运行的作用域
+
+         ```javascript
+         window.color = "red";
+              var o = {color:"blue"};
+              
+              function sayColor(){
+                alert(this.color); 
+              }
+              sayColor(); //red;
+              sayColor.call(this); // red
+              sayColor.call(window); //red
+              sayColor.call(o); // blue 这样使用可以指定运行的环境对象
+         ```
+
+      5. bind():会创建一个函数的实例，其this的值会被绑定到传给bind（）函数的值
+
+         ```javascript
+         ipt>
+               window.color = "red";
+               var o = {color:"blue"};
+               function sayColor(){
+                   alert(this.color);
+               }
+               sayColor(); // red
+               var objSayColor = sayColor.bind(o); // 绑定对象 
+               objSayColor(); // bule
+         ```
+
+- 基本包装类
+
+  - ECMAScript提供了3个特殊的引用类型：Boolean，Number 和String。
+
+  - 没读取一个基本类型值的时候，后台都会创建一个对应的基本包装类型的对象
+
+    ```JavaScript
+     var s1 = "some txt";
+            var s2 = s1.substring(2);
+            
+            // 以上的代码等价于
+            var s1 = new String("some txt");
+            var s2 = s1.substring(2);
+            s1 = null;
+    ```
+
+  - 引用类型和基本包装类型的主要区别就是对象的生存期。自动创建的基本包装类的对象，只存在执行代码的一瞬间。这意味着我们不能为该类型添加属性和方法。（每一次使用该类型都会创建一个新的基本类型对象
+
+  - ```javascript
+          var str = new Object('some txt');
+          alert(str instanceof String); // true
+    // 把字符串传给Object构造函数，就会创建String实例；而传入数值会得到Number的实例
+    ```
+
+  - ```javascript
+          var value = "25";
+          var num = Number(value); // 转型函数 
+          alert(typeof num); // number
+    
+          var num2 = new Number(20); // 构造函数
+          alert(typeof num2); // Object
+    ```
+
+- Boolean类型
+
+  ```javascript
+       var fO = new Boolean(false);
+       var res = fO && true;
+       alert(res);// true 对象本身会转义为true
+  
+       var f2 = false;
+       var res2 = f2 && true;
+       alert(res2); //false
+  
+   	alert(fO instanceof Boolean);// true
+       alert(f2 instanceof Boolean); // false
+       alert(typeof fO); // Object
+       alert(typeof f2); //boolean 
+  
+  // 建议不要使用Boolean对象
+  ```
+
+- Number 类型
+
+  - toString（）：传入一个表示基数的参数，告诉它返回几进制的字符串
+
+    ```javascript
+    	  var num = 10;
+          alert(num.toString());
+          alert(num.toString(2)); // 1010
+          alert(num.toString(8)); // 12
+          alert(num.toString(16)); //a 
+    ```
+
+    - toFixed（）：会按照指定的小数返回数值的字符串表示
+
+      ```javascript
+      
+           var num = 10;
+           alert(num.toFixed(2)); // 10.00
+      
+           var num2 = 10.2112;
+           alert(num2.toFixed(2)); // 10.21
+      
+           var num3 = 10.005;
+           alert(num3.toFixed(2)); // 10.01
+      
+      // 会四舍五入的返回/。但是支持的位数有限
+      ```
+
+    - toExponential（）：该方法返回以指数表达的形式
+
+      ```javascript
+       	var num2 = 10.2112;
+           alert(num2.toExponential());;// 1.02112e+1 
+           alert(num2.toExponential(2));// 1.02e+1
+           // 传入的参数时最后保留小数的位数
+      ```
+
+    - toPrecision（）：该方法可能返回固定大小（fixed）格式。也可能返回指数（exponential）格式；具体时看那种类型的格式更加合适。该方法接收一个参数，表示数值的所有数字的位数/。
+
+      ```JavaScript
+      
+      
+          alert(num.toPrecision(1)); // 1e+2
+          alert(num.toPrecision(2)); // 99
+          alert(num.toPrecision(3)); // 99.0
+      ```
+
+    - String类型
+
+      - String类型含有一个length属性。包含一个字符串的长度
+
+      - 字符方法
+
+        - charAt（）和charCodeAt（）。这两个函数都接收一个参数，表示index
+
+        - charCodeAt()：返回ASCII码
+
+          ```javascript
+            var str = "hello world";
+              alert(str.charAt(1)); // e
+          
+              alert(str.charCodeAt(1)); //101 返回ASCII码
+          ```
+
+      - 字符串操作方法
+
+        ​	 concat（）：
+
+        ```javascript
+            var str = "hello world";
+            var str2 = "nnnn";
+            alert(str.concat(str2)); // "hello worldnnnn"
+        
+              var str = "hello";
+              var str2 = "world";
+              var str3 = "i";
+              alert(str.concat(str2,str3)); // helloworldi 函数可以接收多个参数
+        ```
+
+      - slice（），substr（）和substring（）。这三个方法都会返回被操作字符串的一个子字符串
+
+        ```javascript
+        var str = "hello world";
+             alert(str.substring(3));//  lo world
+             alert(str.substr(3)); // lo world
+             alert(str.slice(3)); //  lo world
+        
+             alert(str.substring(3,7)); // lo w  7是结束的位置
+             alert(str.slice(3,7)); // lo w      7是结束的位置 
+             alert(str.substr(3,7)); // lo worl  7是字符的个数
+        	
+             var str = "hello world";
+             alert(str.slice(-3)); // rld == slice(str.length - 3)
+             alert(str.substring(-3)); // hello world == substring(0)
+             alert(str.substr(-3)); // rld  == substr(str.length - 3)
+        	// slice 和 substr 会把第二个负数转换为 str.length + 这个负数
+        
+            alert(str.slice(3,-4)); //  lo w
+            alert(str.substring(3,-4)); // hel == substring(3,0) == substring(0,3)
+            alert(str.substr(3,-4)); // "" == substr(3,0)
+        
+            // substr 和 subString 都会把第二个负数转换为 0，而且subString 会把小的参数作为起点 
+            // slice  可以很好的表示区间 
+        
+        	
+        ```
+
+    - 字符串的位置方法
+
+      - indexOf（） 和 lastIndexOf（）
+
+    - trim（）方法
+
+      - 这个方法会创建一个字符串的副本，删除前置和后缀的所有空格
+
+        ```javascript
+             var str = "   hello   ";
+              var str2 = str.trim();
+              alert(str2);   // "hello"
+        
+        // 还有trimLeft 和 trimRight
+        ```
+
+      - 字符串大小写的转换方法
+
+        ![image-20210201121858254](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201121858254.png)
+
+      - 字符串的模式匹配方法 
+
+        ```javascript
+        var txt = "cat,fat,bat,sat";
+              var pat = /.at/g;
+              var matches = pat.exec(txt);
+              alert(matches); // cat 只会返回一个元素
+              
+           var txt = "cat,fat,bat,sat";
+              var pat = /.at/g;
+              var matches = pat.exec(txt);
+              alert(matches); // cat
+              
+               var txt = "cat,fat,bat,sat";
+              var pat = /.at/g;
+              var matches = txt.match(pat);
+              alert(matches); // 会返回一个匹配数组
+        
+        // exec 是RegEXp的方法
+        // match 是字符对象的方法 
+        
+         var txt = "cat,fat,bat,sat";
+              var pat = /.at/g;
+              var pos = txt.search(pat); // 只会返回第一个匹配元素的index
+              alert(pos);  
+        // search() 方法是字符对象的一个方法，返回匹配的index 
+        
+        var txt = "cat,fat,bat,sat";
+              var txt2 = txt.replace('at',"end"); // 替换遇到的第一个匹配的元素
+              var pat = /.at/g;
+              var txt3 = txt.replace(pat,"end"); 
+              alert(txt3); // 替换第所有的匹配的元素
+              alert(txt2); 
+        // replace 是字符串对象的一个方法
+        // 一般有两个参数，第一个是匹配的模式，可以是字符串也可以是正则表达式
+        // 第二个参数是被替换的目的字符串
+        
+        var txt = "cat,fat,bat,sat";
+              var res = txt.replace(/(.at)/g,"word($1)");
+            // 匹配的元素会替换为$1
+              alert(res); // word(cat),word(fat),word(bat),word(sat)
+        ```
+
+      - replace函数的第二个参数也可以是一个函数
+
+        ​	。。。。 
+
+  - localeCompare()方法 
+
+    - 这方法比较两个字符串
+
+      ```javascript
+      if(str1 < str2)return -1;
+      if(str1 > str2)return 1;
+      if(str1 == str2)return 0;
+      
+      var str1 = "a";
+            var str2 = "b";
+            var str3 = "a";
+            alert(str1.localeCompare(str2)); // -1
+            alert(str2.localeCompare(str1)); // 1
+            alert(str1.localeCompare(str3)); // 0
+      
+      ```
+
+  - fromCharCode()方法
+
+    - 这个方法是接收字符编码，然后把他们转换为一个字符串。
+
+      ```javascript
+      alert(String.fromCharCode(104,101,108,108,111)); // hello
+      ```
+
+  - HTML方法
+
+    ![image-20210201125224840](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201125224840.png)
+
+- Global对象 
+
+  - Global对象可以说是最特别的一个对象，因为不管从什么角度上看，这个对象都是不存在的。在某种意义上，这个对象是一个终极的“兜底对象”。不属于其他对象的属性和方法，最终都是它的属性和方法。所有的全局变量和全局函数都是Global对象的函数和方法。
+
+  - URI编码方式
+
+    ![image-20210201125956284](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201125956284.png)
+
+    ![image-20210201130104603](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201130104603.png)
+
+    ![image-20210201130228418](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201130228418.png)
+
+  - eval（）方法
+
+    - 它是一个完整的解析器，参数只有一个（字符串）
+
+      ```javascript
+          eval("alert('hello world')");
+          
+          // 等价于下面这个语句
+          alert("hello world");
+          
+      // 在严格模式下，不能再eval中定义函数和变量，下面这两个例子再严格模式下会报错
+      // 在严格模式下，eval作为一个关键字，不能给它赋值
+       	eval('function say(){alert("hello world");}')
+          say();  // hello world
+      	
+         eval('var msg = "hello world";')
+         alert(msg);  // hello world 
+      
+      // 在开发eval（）时应该极为谨慎，防止恶意代码注入
+      ```
+
+      ![image-20210201131241979](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201131241979.png)
+
+    - window对象 
+
+      - 没有指出如何直接访问Global对象，但浏览器都是将全局对象作为window对象的一部分加以实现的。因此在全局作用域中声明的所有变量和函数，就都成为了window对象的属性
+
+        ```JavaScript
+         var color = "red";
+           function sayColor(){
+             alert(window.color);
+           }
+           window.sayColor(); // "red"
+        
+        // 另一种取得Global对象的方法
+        	var global = function(){
+                return this;
+            }
+        ```
+
+    - Math对象
+
+      - Math对象提供了数学计算功能，性能较好
+
+        - Math对象的属性
+
+          ![image-20210201140923850](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201140923850.png)
+
+        - min（）和max（)方法
+
+          - 获取最大值和最小值
+
+          - ```javascript
+             var values = [1,2,3,4,5,6];
+              var minn = Math.min.apply(Math,values);
+              alert(minn);  // 1
+              // 获取特定数组中的最小值 
+            ```
+
+        - 舍入方法
+
+          - Math.ceil()
+          - Math.floor()
+          - Math.round();
+
+        - random()方法
+
+          - 该方法方法一个介于0到1的随机数，不包括0和1
+
+        - ![image-20210201142900119](C:\Users\Libaisonm\AppData\Roaming\Typora\typora-user-images\image-20210201142900119.png)
